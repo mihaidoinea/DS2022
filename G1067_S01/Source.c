@@ -1,4 +1,6 @@
+#include "stdio.h"
 #include "stdlib.h"
+
 int c = 4;
 void switchints(int*, int*);
 void changeArrays(int*, int*);
@@ -19,10 +21,15 @@ void main()
 	v2[4] = 5;
 	switchints(&a, &b);
 	b += c;
-	int* v3 = { &v1[2] };
-	int* v4 = { &v2[3] };
+	int* v3 = { &a };
+	int* v4 = { &b };
 	int* v5 = { &a };
+	//changeArrays(&v3, &v4);
 	changeArrays(v3, v4);
+
+	FILE* pFile = NULL;
+
+
 }
 //float -> double // short -> int //
 void switchints(int* x, int* y)
@@ -31,10 +38,15 @@ void switchints(int* x, int* y)
 	*x = *y;
 	*y = z;
 }
-
+//v1[0], v1[1], v1[2], v1[3], v1[4]
+//*(v1+0), *(v1+1), *(v1+2), *(v1+3), *(v1+4)
 void changeArrays(int* x, int* y)
 {
-	int* aux = x;
-	x = y;
-	y = aux;
+	/*int z = **x;
+	**x = **y;
+	**y = z;*/
+
+	int z = *x;
+	*x = *y;
+	*y = z;
 }
