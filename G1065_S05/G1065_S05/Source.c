@@ -20,9 +20,13 @@ typedef struct Node
 }Node;
 
 /*functions' signatures for memory management*/
+Employee* createInfo(short, char*, char*, double);
 Node* createNode(Employee*);
 /*functions' signatures for list operations*/
-insertTail(Node**, Employee*);
+Node* insertHead(Node*, Employee*);
+void insertTail(Node**, Employee*);
+Node* insertListPos(Node*, Employee*, int);
+void printList(Node*);
 
 void main()
 {
@@ -52,8 +56,94 @@ void main()
 			//parsing the salary
 			token = strtok(NULL, sep_list);
 			emp->salary = atof(token);
-
 			
+			//insert into the list
+			insertTail(&list, emp);
 		}
+
+		printList(list);
+		
+		Employee* e1 = createInfo(31000, "Badulescu Cristian", "Networking", 984.6);
+		int pos = 431;
+		list = insertListPos(list, e1, pos);
+		printf("\n------------After position insert----------------\n");
+		printList(list);
+
+	}
+}
+
+Node* insertListPos(Node* head, Employee* emp, int pos)
+{
+	int index = 1;
+	Node* node = createNode(emp);
+	if (pos <= 1)
+	{
+		//insert at the head
+		node->pNext = head;
+		head = node;
+	}
+	else
+	{	//insert at the pos
+		Node* aux = head;
+		while (aux->pNext && index++ < pos-1)
+			aux = aux->pNext;
+		if (aux->pNext)
+		{
+			node->pNext = aux->pNext;
+		}
+		aux->pNext = node;
+	}
+	return head;
+}
+void printInfo(Employee* emp)
+{
+	printf("Code: %d - Name: %s - Dept: %s - Salary: %f\n", 
+		emp->code,
+		emp->name,
+		emp->department,
+		emp->salary);
+}
+void printList(const Node* head)
+{
+	while (head)
+	{
+		printInfo(head->info);
+		head = head->pNext;
+	}	
+}
+Employee* createInfo(short code, char* name, char* dept, double salary)
+{
+	Employee* emp = (Employee*)malloc(sizeof(Employee));
+	emp->code = code;
+	emp->name = (char*)malloc(strlen(name) + 1);
+	strcpy(emp->name, name);
+	emp->department = (char*)malloc(strlen(dept) + 1);
+	strcpy(emp->department, dept);
+	emp->salary = salary;
+	return emp;
+}
+
+Node* createNode(Employee* emp)
+{
+	//declare and allocate memory
+	Node* node = (Node*)malloc(sizeof(Node));
+	//initialize variable
+	node->info = emp;
+	node->pNext = NULL;
+	//return value
+	return node;
+}
+
+void insertTail(Node** head, Employee* emp)
+{
+	Node* node = createNode(emp);
+	if (*head == NULL)
+		*head = node;
+	else
+	{
+		Node* aux = *head;
+		while (aux->pNext)
+			aux = aux->pNext;
+		aux->pNext = node;
 	}
 }
