@@ -1,6 +1,7 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include "stdio.h"
 #include "stdlib.h"
-
+#include "string.h"
 int c = 4;
 void switchints(int*, int*);
 void changeArrays(int*, int*);
@@ -26,8 +27,20 @@ void main()
 	int* v5 = { &a };
 	//changeArrays(&v3, &v4);
 	changeArrays(v3, v4);
-
-	FILE* pFile = NULL;
+	char buffer[1024]; char* separator = "\n";
+	FILE* pFile = fopen("Data.txt", "r");
+	char** names = malloc(sizeof(char*)*4);
+	int i = 0;
+	if (pFile)
+	{
+		while (fgets(buffer, sizeof(buffer), pFile) != 0)
+		{
+			int length = strlen(buffer);
+			names[i] = malloc(sizeof(char) * (length + 1));
+			strcpy(names[i], buffer);
+			fputs(names[i++], stdout);
+		}
+	}
 
 
 }
