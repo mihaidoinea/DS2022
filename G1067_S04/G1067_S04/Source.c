@@ -80,10 +80,63 @@ void main() {
 				{
 					printf("Name %s\n", agenda[i][j]);
 
+					//create the Student* info
+					Student* student = createInfo(agenda[i][j]);
 					//insert the name into the list
+					//insertHead(&list, student);
+					list = insertTail(list, student);
+
 				}
 			}
 		}
+		printList(list);
 	}
-	int a = 2;
+}
+
+Student* createInfo(char* name)
+{
+	Student* student = (Student*)malloc(sizeof(Student));
+	student->name = (char*)malloc(strlen(name) + 1);
+	strcpy(student->name, name);
+	return student;
+}
+
+Node* createNode(Student* info)
+{
+	Node* node = (Node*)malloc(sizeof(Node));
+	node->info = info;
+	node->pNext = NULL;
+	return node;
+}
+void insertHead(Node** head, Student* info)
+{
+	Node* node = createNode(info);
+	//1. to connect the node to the structure
+	node->pNext = *head;
+	//2. to connect the structure to the node
+	*head = node;
+}
+Node* insertTail(Node* head, Student* info)
+{
+	Node* node = createNode(info);
+	//1. to connect the node to the structure
+	if (head == NULL)
+		head = node;
+	else
+	{
+		//2. to connect the structure to the node
+		Node* tmp = head;
+		while (tmp->pNext)
+			tmp = tmp->pNext;
+		tmp->pNext = node;
+	}
+	return head;
+}
+void deletePosition(Node** head, int pos);
+void printList(Node* head)
+{
+	for (; head; head = head->pNext)
+	{
+		printf("Student Node: %s\n", head->info->name);
+	}
 }
