@@ -27,6 +27,7 @@ Node* insertHead(Node*, Employee*);
 void insertTail(Node**, Employee*);
 Node* insertListPos(Node*, Employee*, int);
 void printList(Node*);
+Node* deleteListPos(Node*, int);
 
 void main()
 {
@@ -68,30 +69,64 @@ void main()
 		list = insertListPos(list, e1, pos);
 		printf("\n------------After position insert----------------\n");
 		printList(list);
+		pos = 10;
+		list = deleteListPos(list, pos);
+		printf("\n------------After position delete----------------\n");
+		printList(list);
 
 	}
+}
+Node* deleteListPos(Node* head, int pos)
+{
+	int index = 1;
+	Node* aux = NULL;
+	if (pos <= 1)
+	{
+		aux = head;
+		head = head->pNext;
+	}
+	else
+	{
+		Node* tmp = head;
+		while (tmp->pNext && index++ < pos - 1)
+			tmp = tmp->pNext;
+		if (tmp->pNext)
+		{
+			aux = tmp->pNext;
+			tmp->pNext = aux->pNext;
+		}
+	}
+	if (aux)
+	{
+		free(aux->info->department);
+		free(aux->info->name);
+		free(aux->info);
+		free(aux);
+	}
+	return head;
+}
+
+Node* insertHead(Node* head, Employee* emp) {
+	Node* newHead = createNode(emp);
+	newHead->pNext = head;
+	head = newHead;
+	return head;
 }
 
 Node* insertListPos(Node* head, Employee* emp, int pos)
 {
 	int index = 1;
-	Node* node = createNode(emp);
 	if (pos <= 1)
 	{
 		//insert at the head
-		node->pNext = head;
-		head = node;
+		head = insertHead(head, emp);
 	}
 	else
 	{	//insert at the pos
 		Node* aux = head;
 		while (aux->pNext && index++ < pos-1)
 			aux = aux->pNext;
-		if (aux->pNext)
-		{
-			node->pNext = aux->pNext;
-		}
-		aux->pNext = node;
+		aux->pNext = insertHead(aux->pNext, emp);
 	}
 	return head;
 }
