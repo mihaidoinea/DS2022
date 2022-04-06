@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include "stdio.h"
 #include "stdlib.h"
 #include "memory.h"
@@ -13,18 +14,22 @@ struct Employee
 typedef struct node
 {
 	struct Employee* info;
-	struct Node* pNext;
+	struct node* pNext;
 }Node;
 typedef struct Employee NodeInfo;
-typedef struct Node SLinkedList;
+typedef struct node SLinkedList;
 #define LINE_BUFFEER 1024
 /*functions signatures for memory management*/
 NodeInfo* createInfo(short, char*, char*, double);
 Node* createNode(NodeInfo*);
 /*functions signatures for list operations*/
+Node* insertTail(SLinkedList*, NodeInfo*);
+void printList(const SLinkedList*);
 
 void main()
 {
+	SLinkedList* list = NULL;
+
 	FILE* pFile = fopen("Data.txt", "r");
 	char* token = NULL, lineBuffer[LINE_BUFFEER], *sepList = ",\n";
 	char* name = NULL, *dept = NULL; short code = 0; double salary = 0.0;
@@ -41,6 +46,54 @@ void main()
 
 			NodeInfo* info = createInfo(code, name, dept, salary);
 
+			list = insertTail(list, info);
+
 		}
+		printList(list);
 	}
+}
+
+void printList(const SLinkedList* head)
+{
+	for (; head; head = head->pNext)
+		printf("Code: %d, Name: %s, Dept: %s, Salary: %f\n",
+			head->info->code,
+			head->info->name,
+			head->info->dept,
+			head->info->salary);
+}
+
+Node* insertTail(SLinkedList* head, NodeInfo* emp)
+{
+	Node* node = createNode(emp);
+	if (head == NULL)
+		head = node;
+	else
+	{
+		Node* aux = head;
+		while (aux->pNext)
+			aux = aux->pNext;
+		aux->pNext = node;
+	}
+	return head;
+}
+
+
+NodeInfo* createInfo(short code, char* name, char* dept, double salary)
+{
+	struct Employee* emp = (NodeInfo*)malloc(sizeof(NodeInfo));
+	emp->code = code;
+	emp->name = (char*)malloc(strlen(name) + 1);
+	strcpy(emp->name, name);
+	emp->dept = (char*)malloc(strlen(dept) + 1);
+	strcpy(emp->dept, dept);
+	emp->salary = salary;
+	return emp;
+}
+Node* createNode(NodeInfo* info)
+{
+	Node* node = (Node*)malloc(sizeof(Node));
+	node->info = info;
+	node->pNext = NULL;
+	return node;
 }
