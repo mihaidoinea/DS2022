@@ -30,6 +30,8 @@ Node* createNode(NodeInfo*);
 Node* insertTail(SLinkedList*, NodeInfo*);
 void printList(const SLinkedList*);
 double averageSalary(const SLinkedList*);
+SLinkedList* addCircularProperty(SLinkedList*);
+void printCircularList(SLinkedList*);
 
 void main()
 {
@@ -55,7 +57,55 @@ void main()
 
 		}
 		printList(list);
+
+		double avg = averageSalary(list);
+		printf("Average salary %f\n", avg);
+
+		list = addCircularProperty(list);
+		printf("\n----------------------------------------------\n");
+		printCircularList(list);
+		
+		avg = averageCircularSalary(list);
+		printf("Average salary %f\n", avg);
+
 	}
+}
+
+void printInfo(Node* node)
+{
+	printf("Code: %d, Name: %s, Dept: %s, Salary: %f\n",
+		node->info->code,
+		node->info->name,
+		node->info->dept,
+		node->info->salary);
+}
+
+void printCircularList(SLinkedList* list)
+{
+	Node* tmp = list;
+	if (list != NULL)
+	{
+		do
+		{
+			printInfo(tmp);
+			tmp = tmp->pNext;
+		} while (tmp!=list);
+	}
+	/*while (tmp->pNext != list)
+	{
+		printInfo(tmp);
+		tmp = tmp->pNext;
+	}
+	printInfo(tmp);*/
+}
+
+SLinkedList* addCircularProperty(SLinkedList* list)
+{
+	Node* head = list;
+	while (list->pNext != NULL)
+		list = list->pNext;
+	list->pNext = head;
+	return head;
 }
 
 double averageSalary(const SLinkedList* head)
@@ -66,6 +116,7 @@ double averageSalary(const SLinkedList* head)
 	{
 		average += head->info->salary;
 		counter++;
+		head = head->pNext;
 	}
 	return average / counter;
 }
@@ -94,7 +145,6 @@ Node* insertTail(SLinkedList* head, NodeInfo* emp)
 	}
 	return head;
 }
-
 
 NodeInfo* createInfo(short code, char* name, char* dept, double salary)
 {
