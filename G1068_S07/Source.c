@@ -24,10 +24,14 @@ typedef struct node Stack;
 NodeInfo* createInfo(short, char*, char*, double);
 Node* createNode(NodeInfo*);
 /*functions signatures for list operations*/
-
+Stack* push(Stack*, NodeInfo*);
+NodeInfo* pop(Stack**);
+NodeInfo* peek(const Stack*);
+void printInfo(NodeInfo*);
 
 void main()
 {
+	Stack* stack = NULL;
 	FILE* pFile = fopen("Data.txt", "r");
 	char* token = NULL, lineBuffer[LINE_BUFFEER], * sepList = ",\n";
 	char* name = NULL, * dept = NULL; short code = 0; double salary = 0.0;
@@ -44,17 +48,41 @@ void main()
 
 			NodeInfo* info = createInfo(code, name, dept, salary);
 
+			stack = push(stack, info);
+			
 		}
+		NodeInfo* emp = pop(&stack);
+		printInfo(emp);
+
 	}
 }
+NodeInfo* pop(Stack** stack)
+{
+	NodeInfo* value = NULL;
+	if (*stack != NULL)
+	{
+		value = (*stack)->info;
+		Node* tmp = *stack;
+		*stack = tmp->pNext;
+		free(tmp);
+	}
+	return value;
+}
 
-void printInfo(Node* node)
+Stack* push(Stack* stack, NodeInfo* node)
+{
+	Stack* newNode = createNode(node);
+	newNode->pNext = stack;
+	return newNode;
+}
+
+void printInfo(NodeInfo* info)
 {
 	printf("Code: %d, Name: %s, Dept: %s, Salary: %f\n",
-		node->info->code,
-		node->info->name,
-		node->info->dept,
-		node->info->salary);
+		info->code,
+		info->name,
+		info->dept,
+		info->salary);
 }
 
 NodeInfo* createInfo(short code, char* name, char* dept, double salary)
