@@ -1,7 +1,3 @@
-//VAIDESCU DAN - 3rd
-//VASILE RADU - 3rd
-//VRANCEANU ALIN
-
 #define _CRT_SECURE_NO_WARNINGS
 #include "stdio.h"
 #include "stdlib.h"
@@ -29,9 +25,12 @@ Node* createNode(NodeInfo*);
 /*functions signatures for list operations*/
 Node* insertTail(SLinkedList*, NodeInfo*);
 void printList(const SLinkedList*);
+<<<<<<< HEAD
 double averageSalary(const SLinkedList*);
 SLinkedList* addCircularProperty(SLinkedList*);
 void printCircularList(SLinkedList*);
+=======
+>>>>>>> parent of 434ea3f (G1068_S05/S06)
 
 void main()
 {
@@ -71,6 +70,7 @@ void main()
 	}
 }
 
+<<<<<<< HEAD
 void printInfo(Node* node)
 {
 	printf("Code: %d, Name: %s, Dept: %s, Salary: %f\n",
@@ -121,6 +121,8 @@ double averageSalary(const SLinkedList* head)
 	return average / counter;
 }
 
+=======
+>>>>>>> parent of 434ea3f (G1068_S05/S06)
 void printList(const SLinkedList* head)
 {
 	for (; head; head = head->pNext)
