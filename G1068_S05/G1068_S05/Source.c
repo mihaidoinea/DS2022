@@ -1,3 +1,7 @@
+//VAIDESCU DAN - 3rd
+//VASILE RADU - 3rd
+//VRANCEANU ALIN
+
 #define _CRT_SECURE_NO_WARNINGS
 #include "stdio.h"
 #include "stdlib.h"
@@ -25,6 +29,7 @@ Node* createNode(NodeInfo*);
 /*functions signatures for list operations*/
 Node* insertTail(SLinkedList*, NodeInfo*);
 void printList(const SLinkedList*);
+double averageSalary(const SLinkedList*);
 
 void main()
 {
@@ -51,6 +56,18 @@ void main()
 		}
 		printList(list);
 	}
+}
+
+double averageSalary(const SLinkedList* head)
+{
+	int counter = 0;
+	double average = 0.0;
+	while (head)
+	{
+		average += head->info->salary;
+		counter++;
+	}
+	return average / counter;
 }
 
 void printList(const SLinkedList* head)
