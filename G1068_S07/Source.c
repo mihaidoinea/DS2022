@@ -28,6 +28,7 @@ Stack* push(Stack*, NodeInfo*);
 NodeInfo* pop(Stack**);
 NodeInfo* peek(const Stack*);
 void printInfo(NodeInfo*);
+Stack* printStack(Stack*);
 
 void main()
 {
@@ -53,8 +54,32 @@ void main()
 		}
 		NodeInfo* emp = pop(&stack);
 		printInfo(emp);
-
+		stack = printStack(stack);
+		printf("\n------------------------\n");
+		stack = printStack(stack);
+		printf("\n------------------------\n");
+		while (stack)
+		{
+			NodeInfo* emp = pop(&stack);
+			printInfo(emp);
+			free(emp->name);
+			free(emp->dept);
+			free(emp);
+		}
 	}
+}
+Stack* printStack(Stack* stack)
+{
+	Stack* tmp = NULL;
+	while (stack)
+	{
+		NodeInfo* emp = pop(&stack);
+		printInfo(emp);
+		tmp = push(tmp, emp);
+	}
+	while (tmp)
+		stack = push(stack, pop(&tmp));
+	return stack;
 }
 NodeInfo* pop(Stack** stack)
 {
