@@ -80,19 +80,32 @@ void main()
 			printf("\n----------------------------------------------\n");
 			deleteHeadList(&list);
 			printCircularList(list);
-		}
-		
+		}		
 	}
 }
 
 void deleteHeadList(SLinkedList** list)
 {
-	Node* iterator = *list;
-	while (iterator->pNext != *list)
-		iterator = iterator->pNext;
-	iterator->pNext = (*list)->pNext;
 	Node* tmp = *list;
-	*list = tmp->pNext;
+	if (*list)
+	{	
+		if ((*list)->pNext == *list)
+		{
+			*list = NULL;
+		}
+		else
+		{
+			Node* iterator = *list;
+			while (iterator->pNext != *list)
+				iterator = iterator->pNext;
+			iterator->pNext = (*list)->pNext;
+			*list = tmp->pNext;
+		}
+		free(tmp->info->name);
+		free(tmp->info->dept);
+		free(tmp->info);
+	}
+	free(tmp);
 }
 
 double averageCircularSalary(const SLinkedList* list)
@@ -111,7 +124,6 @@ double averageCircularSalary(const SLinkedList* list)
 	}
 	return average / counter;
 }
-
 
 void printInfo(Node* node)
 {
