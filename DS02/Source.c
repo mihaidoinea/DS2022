@@ -21,7 +21,8 @@ void main()
 	c = a + b;
 
 	int* pc = malloc(4);
-	free(pc);
+	*pc = c;
+	//free(pc);
 	if (pc)
 	{
 		printf("value=%d", *pc);
