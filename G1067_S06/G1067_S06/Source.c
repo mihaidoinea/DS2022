@@ -3,6 +3,7 @@
 #include "stdlib.h"
 #include "string.h"
 #include "memory.h"
+#include <stdbool.h>
 //keyboad - stdin
 //console - stdout
 #define LINE_BUFFER 128
@@ -19,15 +20,23 @@ typedef struct Node
 	struct Node* pNext;
 }Node;
 
+typedef struct Node Stack;
+
 /*functions' signatures for memory management*/
 Employee* createInfo(short, char*, char*, double);
 Node* createNode(Employee*);
 /*functions' signatures for list operations*/
 void printList(Node*);
+void printInfo(Employee*);
+void push(Node**, Employee*);
+Employee* pop(Node**);
+Employee* peek(Node*);
+bool isEmpty(Node*);
 
 void main()
 {
 	Node* list = NULL;
+	Stack* stack = NULL;
 	FILE* pFile = fopen("Data.txt", "r");
 	char lineBuffer[LINE_BUFFER], * token, sep_list[] = ",\n";
 	Employee* emp = NULL;
@@ -54,11 +63,49 @@ void main()
 			token = strtok(NULL, sep_list);
 			emp->salary = atof(token);
 
+			push(&stack, emp);
+
+		}
+		//printList(list);
+		//Employee* emp = peek(stack);
+
+		while ((emp = pop(&stack)) != NULL)
+		{
+			printInfo(emp);
 		}
 
-		printList(list);
-
 	}
+}
+
+Employee* peek(Stack* topStack)
+{
+	topStack = topStack->pNext;
+	topStack->pNext = NULL;
+}
+
+void push(Stack** topStack, Employee* emp)
+{
+	Node* node = createNode(emp);
+	node->pNext = *topStack;
+	*topStack = node;
+}
+
+bool isEmpty(Stack* topStack)
+{
+	return (topStack == NULL);
+}
+
+Employee* pop(Stack** topStack)
+{
+	Employee* value = NULL;
+	if (!isEmpty(*topStack))
+	{
+		value = (*topStack)->info;
+		Node* tmp = *topStack;
+		*topStack = tmp->pNext;
+		free(tmp);
+	}
+	return value;
 }
 
 void printInfo(Employee* emp)
