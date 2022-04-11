@@ -76,6 +76,9 @@ void deleteStack(Stack** topStack)
 	while ( (emp = pop(&*topStack)) != NULL)
 	{
 		printInfo(emp);
+		free(emp->department);
+		free(emp->name);
+		free(emp);
 	}
 }
 
