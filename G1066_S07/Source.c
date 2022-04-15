@@ -14,7 +14,7 @@ struct Employee
 typedef struct Node
 {
 	struct Employee* info;
-	struct node* pNext;
+	struct Node* pNext;
 }Queue;
 
 typedef struct Employee NodeInfo;
@@ -24,12 +24,13 @@ typedef struct Employee NodeInfo;
 NodeInfo* createInfo(short, char*, char*, double);
 Queue* createNode(NodeInfo*);
 /*functions signatures for list operations*/
-
 void printInfo(NodeInfo*);
+Queue* put(Queue*, NodeInfo*);
+NodeInfo* get(Queue**);
 
 void main()
 {
-	Queue* queue = NULL;
+	Queue* queueTail = NULL;
 
 	FILE* pFile = fopen("Data.txt", "r");
 	char* token = NULL, lineBuffer[LINE_BUFFEER], * sepList = ",\n";
@@ -46,8 +47,39 @@ void main()
 			salary = atof(token);
 
 			NodeInfo* info = createInfo(code, name, dept, salary);
+			queueTail = put(queueTail, info);
 		}
+		deleteQueue(&queueTail);
 	}
+}
+
+NodeInfo* get(Queue** tail)
+{
+	NodeInfo* value = NULL;
+	if (*tail != NULL)
+	{
+		value = (*tail)->pNext->info;
+		Queue* tmp = (*tail)->pNext;
+		if (tmp->pNext == tmp)
+			(*tail) = NULL;
+		else
+			(*tail)->pNext = tmp->pNext;
+		free(tmp);
+	}
+	return value;
+}
+
+Queue* put(Queue* tail, NodeInfo* info)
+{
+	Queue* node = createNode(info);
+	if (tail == NULL)
+		node->pNext = node;
+	else
+	{
+		node->pNext = tail->pNext;
+		tail->pNext = node;
+	}
+	return node;
 }
 
 void printInfo(NodeInfo* info)
