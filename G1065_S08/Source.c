@@ -25,11 +25,13 @@ typedef struct node Queue;
 NodeInfo* createInfo(short, char*, char*, double);
 Node* createNode(NodeInfo*);
 /*functions signatures for list operations*/
-
+Queue* put(Queue*, NodeInfo*);
+NodeInfo* get(Queue**);
+void printInfo(NodeInfo* info);
 
 void main()
 {
-	Queue* queue = NULL;
+	Queue* queueTail = NULL;
 
 	FILE* pFile = fopen("Data.txt", "r");
 	char* token = NULL, lineBuffer[LINE_BUFFEER], * sepList = ",\n";
@@ -46,10 +48,50 @@ void main()
 			salary = atof(token);
 
 			NodeInfo* info = createInfo(code, name, dept, salary);
+			queueTail = put(queueTail, info);
 
 		}
 
+		struct Employee* info = NULL;
+		while((info = get(&queueTail))!= NULL)
+		{
+			printInfo(info);
+			free(info->dept);
+			free(info->name);
+			free(info);
+		}
+		
 	}
+}
+
+NodeInfo* get(Queue** tail)
+{
+	NodeInfo* value = NULL;
+	if (*tail != NULL)
+	{
+		value = (*tail)->pNext->info; //1
+		Queue* tmp = (*tail)->pNext;  //2
+		if (*tail == (*tail)->pNext)
+			*tail = NULL;
+		else
+			(*tail)->pNext = tmp->pNext;  //3
+		free(tmp); //4
+	}
+	return value; //5
+}
+
+
+Queue* put(Queue* tail, NodeInfo* info)
+{
+	Queue* node = createNode(info);
+	if (tail == NULL)
+		node->pNext = node;
+	else
+	{
+		node->pNext = tail->pNext;
+		tail->pNext = node;
+	}
+	return node;
 }
 
 void printInfo(NodeInfo* info)
@@ -73,6 +115,5 @@ Node* createNode(NodeInfo* info)
 	Node* node = (Node*)malloc(sizeof(Node));
 	node->info = info;
 	node->pNext = NULL;
-	node->pPrev = NULL;
 	return node;
 }
