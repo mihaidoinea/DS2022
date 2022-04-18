@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32126.315
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DSROCurs", "DSROCurs.vcxproj", "{51F40D2A-F367-4F4F-9FE5-79791FBE2A30}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{51F40D2A-F367-4F4F-9FE5-79791FBE2A30}.Debug|x64.ActiveCfg = Debug|x64
+		{51F40D2A-F367-4F4F-9FE5-79791FBE2A30}.Debug|x64.Build.0 = Debug|x64
+		{51F40D2A-F367-4F4F-9FE5-79791FBE2A30}.Debug|x86.ActiveCfg = Debug|Win32
+		{51F40D2A-F367-4F4F-9FE5-79791FBE2A30}.Debug|x86.Build.0 = Debug|Win32
+		{51F40D2A-F367-4F4F-9FE5-79791FBE2A30}.Release|x64.ActiveCfg = Release|x64
+		{51F40D2A-F367-4F4F-9FE5-79791FBE2A30}.Release|x64.Build.0 = Release|x64
+		{51F40D2A-F367-4F4F-9FE5-79791FBE2A30}.Release|x86.ActiveCfg = Release|Win32
+		{51F40D2A-F367-4F4F-9FE5-79791FBE2A30}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {07FF63D5-AED8-4533-86D0-C6D56C1D9B61}
+	EndGlobalSection
+EndGlobal

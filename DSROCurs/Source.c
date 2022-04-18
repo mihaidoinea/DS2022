@@ -26,23 +26,21 @@ typedef struct node Queue;
 NodeInfo* createInfo(short, char*, char*, double);
 Node* createNode(NodeInfo*);
 /*functions signatures for list operations*/
-void push(Stack**, NodeInfo*);
+Stack* push(Stack*, NodeInfo*);
 NodeInfo* pop(Stack**);
-NodeInfo* peek(const Stack*);
-void printInfo(NodeInfo*);
 
 Queue* put(Queue*, NodeInfo*);
 NodeInfo* get(Queue**);
-NodeInfo* peek(const Queue*);
+
+NodeInfo* peek(const Node*);
+void printInfo(NodeInfo*);
 
 void main()
 {
 	Queue* queue = NULL;
 	Stack* stack = NULL;
-
 	FILE* pFile = fopen("Data.txt", "r");
-	char* token = NULL, lineBuffer[LINE_BUFFEER];
-	const char *sepList = ",\n";
+	char* token = NULL, lineBuffer[LINE_BUFFEER], * sepList = ",\n";
 	char* name = NULL, * dept = NULL; short code = 0; double salary = 0.0;
 	if (pFile)
 	{
@@ -55,26 +53,35 @@ void main()
 			token = strtok(NULL, sepList);
 			salary = atof(token);
 
+			//implementare stiva prin lista simplu inlantuita
 			NodeInfo* infoStack = createInfo(code, name, dept, salary);
-			push(&stack, infoStack);
-
+			stack = push(stack, infoStack);
+			
+			//implementare coada prin lista simplu inlantuita circulara
 			NodeInfo* infoQueue = createInfo(code, name, dept, salary);
 			queue = put(queue, infoQueue);
+
 		}
-		NodeInfo* emp = peek(stack);
-		printInfo(emp);
+		printf("\nPeek:\n");
+		NodeInfo* top = peek(stack);
+		printInfo(top);
+		printf("\n------------------------------------\n");
 		while (stack != NULL)
 		{
-			emp = pop(&stack);
+			NodeInfo* emp = pop(&stack);
 			printInfo(emp);
 			free(emp->name);
 			free(emp->dept);
 			free(emp);
 		}
-		printf("\n------------------------------\n");
+		printf("\n------------------------------------\n");
+		printf("\nPeek:\n");
+		top = peek(queue->pNext);
+		printInfo(top);
+		printf("\n------------------------------------\n");
 		while (queue != NULL)
 		{
-			emp = get(&queue);
+			NodeInfo* emp = get(&queue);
 			printInfo(emp);
 			free(emp->name);
 			free(emp->dept);
@@ -91,21 +98,20 @@ NodeInfo* get(Queue** queueTail)
 	{
 		value = (*queueTail)->pNext->info;
 		Node* tmp = (*queueTail)->pNext;
-		if (tmp == *queueTail)
-			*queueTail = NULL;
+		if (tmp == (*queueTail))
+			(*queueTail) = NULL;
 		else
 			(*queueTail)->pNext = tmp->pNext;
 		free(tmp);
 	}
 	return value;
 }
-
 Queue* put(Queue* queueTail, NodeInfo* info)
 {
 	Node* node = createNode(info);
 	if (queueTail == NULL)
 		node->pNext = node;
-	else
+	else 
 	{
 		node->pNext = queueTail->pNext;
 		queueTail->pNext = node;
@@ -113,34 +119,33 @@ Queue* put(Queue* queueTail, NodeInfo* info)
 	return node;
 }
 
-NodeInfo* peek(const Stack* stack)
+NodeInfo* peek(const Node* node)
 {
 	NodeInfo* value = NULL;
-	if (stack != NULL)
-		value = stack->info;
+	if (node != NULL)
+		value = node->info;
 	return value;
 }
 
-NodeInfo* pop(Stack** stack)
+NodeInfo* pop(Stack** topStack)
 {
 	NodeInfo* value = NULL;
-	if (*stack != NULL)
+	if (*topStack != NULL)
 	{
-		value = (*stack)->info;
-		Node* tmp = (*stack);
-		(*stack) = tmp->pNext;
+		value = (*topStack)->info;
+		Node* tmp = (*topStack);
+		(*topStack) = tmp->pNext;
 		free(tmp);
 	}
 	return value;
 }
 
-void push(Stack** stack, NodeInfo* info)
+Stack* push(Stack* topStack, NodeInfo* info)
 {
 	Node* node = createNode(info);
-	node->pNext = *stack;
-	*stack = node;
+	node->pNext = topStack;
+	return node;
 }
-
 
 void printInfo(NodeInfo* info)
 {

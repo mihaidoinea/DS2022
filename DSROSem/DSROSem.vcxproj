@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{83aac6d4-535b-41b1-8927-c30169a11456}</ProjectGuid>
-    <RootNamespace>DSRO</RootNamespace>
+    <ProjectGuid>{9e88d60f-8418-4a37-b535-46fc12aea0bd}</ProjectGuid>
+    <RootNamespace>DSROSem</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
