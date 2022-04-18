@@ -25,12 +25,13 @@ typedef struct node Queue;
 NodeInfo* createInfo(short, char*, char*, double);
 Node* createNode(NodeInfo*);
 /*functions signatures for list operations*/
-
 void printInfo(NodeInfo*);
+Node* put(Queue*, NodeInfo*);
+NodeInfo* get(Queue**);
 
 void main()
 {
-	Queue* queue = NULL;
+	Queue* queueTail = NULL;
 
 	FILE* pFile = fopen("Data.txt", "r");
 	char* token = NULL, lineBuffer[LINE_BUFFEER], * sepList = ",\n";
@@ -48,9 +49,53 @@ void main()
 
 			NodeInfo* info = createInfo(code, name, dept, salary);
 
+			queueTail = put(queueTail, info);
 
 		}
+		NodeInfo* info = NULL;
+		while ((info = get(&queueTail)) != NULL)
+		{
+			printInfo(info);
+			free(info->dept);
+			free(info->name);
+			free(info);
+		}
 	}
+}
+
+NodeInfo* get(Queue** queueTail)
+{
+	NodeInfo* value = NULL;
+	if (*queueTail != NULL)
+	{
+		value = (*queueTail)->pNext->info;
+		Node* tmp = (*queueTail)->pNext;
+		if (tmp == tmp->pNext)
+			*queueTail = NULL;
+		else
+		{
+			(*queueTail)->pNext = tmp->pNext;
+		}
+		free(tmp);
+	}
+	return value;
+}
+
+Node* put(Queue* queueTail, NodeInfo* info)
+{
+	Node* node = createNode(info);
+	if (queueTail == NULL)
+	{
+		node->pNext = node;
+	}
+	else
+	{
+		//connect the new node to the head of the queue
+		node->pNext = queueTail->pNext;
+		queueTail->pNext = node;
+	}
+	//return the new tail of the queue
+	return node;
 }
 
 void printInfo(NodeInfo* info)
