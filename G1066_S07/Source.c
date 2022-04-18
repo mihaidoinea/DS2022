@@ -3,6 +3,7 @@
 #include "stdlib.h"
 #include "memory.h"
 #include "string.h"
+#include "stdbool.h"
 struct Employee
 {
 	short code;
@@ -27,6 +28,9 @@ Queue* createNode(NodeInfo*);
 void printInfo(NodeInfo*);
 Queue* put(Queue*, NodeInfo*);
 NodeInfo* get(Queue**);
+void deleteQueue(Queue**);
+bool isEmpty(Queue*);
+void printQueue(Queue**);
 
 void main()
 {
@@ -49,14 +53,45 @@ void main()
 			NodeInfo* info = createInfo(code, name, dept, salary);
 			queueTail = put(queueTail, info);
 		}
+		printQueue(&queueTail);
+		printf("\n--------------------------------\n");
 		deleteQueue(&queueTail);
+
+	}
+}
+void printQueue(Queue** tail)
+{
+	Queue* tmp = NULL;
+	while (!isEmpty(*tail))
+	{
+		NodeInfo* info = get(tail);
+		printInfo(info);
+		tmp = put(tmp, info);
+	}
+	*tail = tmp;
+}
+
+bool isEmpty(Queue* queue)
+{
+	return (queue == NULL);
+}
+void deleteQueue(Queue** tail)
+{
+	while (!isEmpty(*tail))
+	{
+		//NodeInfo* emp = get(&*tail); //queueTail == *tail
+		NodeInfo* emp = get(tail);
+		printInfo(emp);
+		free(emp->name);
+		free(emp->dept);
+		free(emp);		
 	}
 }
 
 NodeInfo* get(Queue** tail)
 {
 	NodeInfo* value = NULL;
-	if (*tail != NULL)
+	if (!isEmpty(*tail))
 	{
 		value = (*tail)->pNext->info;
 		Queue* tmp = (*tail)->pNext;
@@ -72,7 +107,7 @@ NodeInfo* get(Queue** tail)
 Queue* put(Queue* tail, NodeInfo* info)
 {
 	Queue* node = createNode(info);
-	if (tail == NULL)
+	if (isEmpty(tail))
 		node->pNext = node;
 	else
 	{
