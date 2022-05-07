@@ -11,16 +11,26 @@ struct Employee
 	double salary;
 };
 
+typedef struct PrioQueue
+{
+	struct Employee** items;
+	int index;
+	int size;
+}PrioQueue;
+
 typedef struct Employee NodeInfo;
 
 #define LINE_BUFFEER 1024
 /*functions signatures for memory management*/
 NodeInfo* createInfo(short, char*, char*, double);
+void printInfo(NodeInfo*);
 /*functions signatures for PQ operations*/
-
+void putEmployee(PrioQueue*, NodeInfo*);
+NodeInfo* getEmployee(PrioQueue*);
 
 void main()
 {
+	PrioQueue pQueue = { .items = NULL, .size=0, .index=0 };
 
 	FILE* pFile = fopen("Data.txt", "r");
 	char* token = NULL, lineBuffer[LINE_BUFFEER], * sepList = ",\n";
@@ -38,12 +48,57 @@ void main()
 
 			NodeInfo* info = createInfo(code, name, dept, salary);
 
-			
+			putEmployee(&pQueue, info);
+
+			printf("\n----------------------------\n");
+			for (int i = 0; i < pQueue.index; i++)
+			{
+				printInfo(pQueue.items[i]);
+			}
 
 		}
 	}
 }
+void ReHeapUp(PrioQueue* pQueue, int childIndex)
+{
+	if (childIndex > 0)
+	{
+		int parentIndex = (childIndex - 1) / 2;
+		if (pQueue->items[childIndex]->code > pQueue->items[parentIndex]->code)
+		{
+			NodeInfo* tmp = pQueue->items[childIndex];
+			pQueue->items[childIndex] = pQueue->items[parentIndex];
+			pQueue->items[parentIndex] = tmp;
+			ReHeapUp(pQueue, parentIndex);
+		}
+	}
+}
+void putEmployee(PrioQueue* pQueue, NodeInfo* emp)
+{
+	if (pQueue->items == NULL)
+	{
+		pQueue->items = (NodeInfo**)malloc(10 * sizeof(NodeInfo*));
+		memset(pQueue->items, NULL, 10 * sizeof(NodeInfo*));
+		pQueue->size = 10;
+	}
+	//resize operation
+	if (pQueue->index >= pQueue->size)
+	{
+		NodeInfo** aux = pQueue->items;
+		pQueue->items = (NodeInfo**)malloc(pQueue->size * 2 * sizeof(NodeInfo*));
+		for (int i = 0; i < pQueue->index; i++)
+		{
+			pQueue->items[i] = aux[i];
+			pQueue->items[pQueue->index + i] = NULL;
+		}
+		pQueue->size *= 2;
+		free(aux);
+	}
+	pQueue->items[pQueue->index] = emp;
+	ReHeapUp(pQueue, pQueue->index);
+	pQueue->index++;
 
+}
 
 void printInfo(NodeInfo* info)
 {
