@@ -20,14 +20,17 @@ typedef struct HT
 
 
 #define LINE_BUFFEER 1024
+#define HT_INITIAL_CAPACITY 3
 /*functions signatures for memory management*/
 NodeInfo* createInfo(short, char*, char*, double);
 void printInfo(NodeInfo* info);
 /*functions signatures for PQ operations*/
-
+void putHT(HashTable*, NodeInfo*);
 
 void main()
 {
+	HashTable hashTable = { .items = NULL, .size = 0 };
+
 	FILE* pFile = fopen("Data.txt", "r");
 	char* token = NULL, lineBuffer[LINE_BUFFEER], * sepList = ",\n";
 	char* name = NULL, * dept = NULL; short code = 0; double salary = 0.0;
@@ -43,13 +46,69 @@ void main()
 			salary = atof(token);
 
 			NodeInfo* info = createInfo(code, name, dept, salary);
+			putHT(&hashTable, info);
 
+			printf("\n***************************\n");
+			printf("\nSize: %d\n", hashTable.size);
+			for(int i=0; i<hashTable.size; i++)
+				if (hashTable.items[i] != NULL)
+				{
+					printf("Index: %d", i);
+					printInfo(hashTable.items[i]);
+				}
 
 		}
 
 	}
 }
-
+int fhash(char* key, int size)
+{
+	return key[0] % size;
+}
+void resizeHT(HashTable* hTable)
+{
+	NodeInfo** aux = hTable->items;
+	hTable->items = (NodeInfo**)malloc(sizeof(NodeInfo*) * 2 * hTable->size);
+	memset(hTable->items, NULL, sizeof(NodeInfo*) * 2 * hTable->size);
+	hTable->size *= 2;
+	for (int i = 0; i < hTable->size / 2; i++)
+	{
+		if (aux[i] != NULL)
+			putHT(hTable, aux[i]);
+	}
+	free(aux);
+}
+int linearProbing(HashTable* hTable, int index, char* key)
+{
+	while (hTable->items[index] != NULL &&
+		strcmp(hTable->items[index]->name, key) !=0)
+	{
+		index++;
+		if (index == hTable->size)
+		{
+			resizeHT(hTable);
+			index = fhash(key, hTable->size);
+		}
+	}
+	return index;
+}
+void putHT(HashTable* hTable, NodeInfo* emp)
+{
+	//first initialization of the hashtable
+	if (hTable->items == NULL)
+	{
+		hTable->items = (NodeInfo**)malloc(sizeof(NodeInfo*) * HT_INITIAL_CAPACITY);
+		memset(hTable->items, NULL, sizeof(NodeInfo*) * HT_INITIAL_CAPACITY);
+		hTable->size = HT_INITIAL_CAPACITY;
+	}
+	int index = fhash(emp->name, hTable->size);
+	if (hTable->items[index] != NULL)
+	{
+		//probing which returns a valid index
+		index = linearProbing(hTable, index, emp->name);
+	}
+	hTable->items[index] = emp;
+}
 
 void printInfo(NodeInfo* info)
 {
