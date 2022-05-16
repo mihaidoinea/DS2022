@@ -18,14 +18,14 @@ typedef struct HT
 	int size;
 }HashTable;
 
-
 #define LINE_BUFFEER 1024
 #define HT_INITIAL_CAPACITY 3
 /*functions signatures for memory management*/
 NodeInfo* createInfo(short, char*, char*, double);
-void printInfo(NodeInfo* info);
+void printInfo(NodeInfo*);
 /*functions signatures for PQ operations*/
 void putHT(HashTable*, NodeInfo*);
+NodeInfo* get(HashTable, char*);
 
 void main()
 {
@@ -50,17 +50,31 @@ void main()
 
 			printf("\n***************************\n");
 			printf("\nSize: %d\n", hashTable.size);
-			for(int i=0; i<hashTable.size; i++)
+			for (int i = 0; i < hashTable.size; i++)
 				if (hashTable.items[i] != NULL)
 				{
-					printf("Index: %d", i);
+					printf("Index: %d --", i);
 					printInfo(hashTable.items[i]);
 				}
-
+			NodeInfo* emp = get(hashTable, "Cazacu Robert");
+			printInfo(emp);
 		}
-
 	}
 }
+NodeInfo* get(HashTable hTable, char* key)
+{
+	NodeInfo* result = NULL;
+	if (hTable.items != NULL)
+	{
+		int index = fhash(key, hTable.size);
+		while (index < hTable.size && hTable.items[index] != NULL && strcmp(key, hTable.items[index]->name) != 0)
+			index++;
+		if (index < hTable.size && hTable.items[index] != NULL)
+			result = hTable.items[index];
+	}
+	return result;
+}
+
 int fhash(char* key, int size)
 {
 	return key[0] % size;
