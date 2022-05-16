@@ -8,3 +8,4 @@
 10008,Neacsu Ruxandra,Production,1400.5
 10009,Ionescu Vasiliu,Testing,3000.2
 10010,Togan Bogdan,Design,2700.8
+10011,Albulescu Ioana,Design,3400.4
