@@ -17,6 +17,7 @@ typedef struct BST
 	struct BST* left;
 	NodeInfo* info;
 	struct BST* right;
+	short bfactor;
 }BinarySearchTree;
 
 
@@ -26,6 +27,7 @@ NodeInfo* createInfo(short, char*, char*, double);
 BinarySearchTree* createNode(NodeInfo*);
 void printInfo(NodeInfo* info);
 /*functions signatures for BST-AVL operations*/
+BinarySearchTree* rebalance(BinarySearchTree*);
 
 void insertBST(BinarySearchTree** root, NodeInfo* emp)
 {
@@ -42,7 +44,56 @@ void insertBST(BinarySearchTree** root, NodeInfo* emp)
 		else
 			(*root)->info = emp;
 	}
+	*root = rebalance(*root);
 }
+BinarySearchTree* LRP(BinarySearchTree* pivot)
+{
+	BinarySearchTree* desc = pivot->right;
+	pivot->right = desc->left;
+	desc->left = pivot;
+	return desc;
+}
+BinarySearchTree* RRP(BinarySearchTree* pivot)
+{
+	BinarySearchTree* desc = pivot->left;
+	pivot->left = desc->right;
+	desc->right = pivot;
+	return desc;
+}
+short balanceFactor(BinarySearchTree* root)
+{
+	return height(root->right) - height(root->left);
+}
+BinarySearchTree* rebalance(BinarySearchTree* root)
+{
+	root->bfactor = balanceFactor(root);
+	if (root->bfactor == -2)
+	{
+		BinarySearchTree* desc = root->left;
+		if (desc->bfactor == -1)
+			root = RRP(root);//RRP
+		else 
+		{
+			//LRP->RRP
+			root->left = LRP(desc);
+			root = RRP(root);
+		}
+	}
+	else if (root->bfactor == 2)
+	{
+		BinarySearchTree* desc = root->right;
+		if (desc->bfactor == 1)
+			root = LRP(root);//LRP
+		else 
+		{
+			//RRP -> LRP
+			root->right = RRP(desc);
+			root = LRP(root);
+		}
+	}
+	return root;
+}
+
 void preorder_PLR(BinarySearchTree* root)
 {
 	if (root)
@@ -60,6 +111,14 @@ void inorder_LPR(BinarySearchTree* root)
 		printInfo(root->info);
 		inorder_LPR(root->right);
 	}
+}
+
+int height(BinarySearchTree* root)
+{
+	if (root)
+		return 1 + max(height(root->right), height(root->left));
+	else
+		return 0;
 }
 
 void main()
@@ -105,6 +164,7 @@ BinarySearchTree* createNode(NodeInfo* emp)
 	BinarySearchTree* node = (BinarySearchTree*)malloc(sizeof(BinarySearchTree));
 	node->info = emp;
 	node->left = node->right = NULL;
+	node->bfactor = 0;
 	return node;
 }
 
