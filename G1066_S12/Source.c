@@ -30,6 +30,7 @@ void insertBST(BinarySearchTree**, NodeInfo*);
 void deleteBST(BinarySearchTree**, short);
 void inorder_LPR(BinarySearchTree*);
 void preorder_PLR(BinarySearchTree*);
+void printLeaves(BinarySearchTree*);
 void main()
 {
 	BinarySearchTree* bTree = NULL;
@@ -58,9 +59,21 @@ void main()
 
 		printf("\n***********************************\n");
 		deleteBST(&bTree, 10003);
-		inorder_LPR(bTree);
+		//inorder_LPR(bTree);
+		printLeaves(bTree);
 	}
 }
+void printLeaves(BinarySearchTree* root)
+{
+	if (root)
+	{
+		printLeaves(root->left);
+		if (root->left == NULL && root->right == NULL)
+			printInfo(root->info);
+		printLeaves(root->right);
+	}
+}
+
 void preorder_PLR(BinarySearchTree* root)
 {
 	if (root)
