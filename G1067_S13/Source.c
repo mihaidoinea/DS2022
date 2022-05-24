@@ -19,16 +19,54 @@ typedef struct BST
 	struct BST* right;
 	short bfactor;
 }BinarySearchTree;
-
-
 #define LINE_BUFFEER 1024
+
 /*functions signatures for memory management*/
 NodeInfo* createInfo(short, char*, char*, double);
 BinarySearchTree* createNode(NodeInfo*);
-void printInfo(NodeInfo* info);
+void printInfo(NodeInfo*);
 /*functions signatures for BST-AVL operations*/
 BinarySearchTree* rebalance(BinarySearchTree*);
+int height(BinarySearchTree*);
+void insertBST(BinarySearchTree**, NodeInfo*);
+BinarySearchTree* LRP(BinarySearchTree*);
+BinarySearchTree* RRP(BinarySearchTree*);
+short balanceFactor(BinarySearchTree*);
+BinarySearchTree* rebalance(BinarySearchTree*);
+void preorder_PLR(BinarySearchTree*);
+void inorder_LPR(BinarySearchTree*);
+int height(BinarySearchTree*);
 
+void main()
+{
+	BinarySearchTree* bTree = NULL;
+
+	FILE* pFile = fopen("Data.txt", "r");
+	char* token = NULL, lineBuffer[LINE_BUFFEER], * sepList = ",\n";
+	char* name = NULL, * dept = NULL; short code = 0; double salary = 0.0;
+	if (pFile)
+	{
+		while (fgets(lineBuffer, sizeof(lineBuffer), pFile) != NULL)
+		{
+			token = strtok(lineBuffer, sepList);
+			code = atoi(token);
+			name = strtok(NULL, sepList);
+			dept = strtok(NULL, sepList);
+			token = strtok(NULL, sepList);
+			salary = atof(token);
+
+			NodeInfo* info = createInfo(code, name, dept, salary);
+
+			insertBST(&bTree, info);
+			printf("\n*********************************\n");
+			preorder_PLR(bTree);
+
+		}
+		//short lvl = 3;
+		//printLevel(bTree, lvl);
+
+	}
+}
 void insertBST(BinarySearchTree** root, NodeInfo* emp)
 {
 	if (*root == NULL)
@@ -72,7 +110,7 @@ BinarySearchTree* rebalance(BinarySearchTree* root)
 		BinarySearchTree* desc = root->left;
 		if (desc->bfactor == -1)
 			root = RRP(root);//RRP
-		else 
+		else
 		{
 			//LRP->RRP
 			root->left = LRP(desc);
@@ -84,7 +122,7 @@ BinarySearchTree* rebalance(BinarySearchTree* root)
 		BinarySearchTree* desc = root->right;
 		if (desc->bfactor == 1)
 			root = LRP(root);//LRP
-		else 
+		else
 		{
 			//RRP -> LRP
 			root->right = RRP(desc);
@@ -93,7 +131,6 @@ BinarySearchTree* rebalance(BinarySearchTree* root)
 	}
 	return root;
 }
-
 void preorder_PLR(BinarySearchTree* root)
 {
 	if (root)
@@ -112,7 +149,6 @@ void inorder_LPR(BinarySearchTree* root)
 		inorder_LPR(root->right);
 	}
 }
-
 int height(BinarySearchTree* root)
 {
 	if (root)
@@ -120,36 +156,6 @@ int height(BinarySearchTree* root)
 	else
 		return 0;
 }
-
-void main()
-{
-	BinarySearchTree* bTree = NULL;
-
-	FILE* pFile = fopen("Data.txt", "r");
-	char* token = NULL, lineBuffer[LINE_BUFFEER], * sepList = ",\n";
-	char* name = NULL, * dept = NULL; short code = 0; double salary = 0.0;
-	if (pFile)
-	{
-		while (fgets(lineBuffer, sizeof(lineBuffer), pFile) != NULL)
-		{
-			token = strtok(lineBuffer, sepList);
-			code = atoi(token);
-			name = strtok(NULL, sepList);
-			dept = strtok(NULL, sepList);
-			token = strtok(NULL, sepList);
-			salary = atof(token);
-
-			NodeInfo* info = createInfo(code, name, dept, salary);
-
-			insertBST(&bTree, info);
-			printf("\n*********************************\n");
-			preorder_PLR(bTree);
-
-		}
-
-	}
-}
-
 
 void printInfo(NodeInfo* info)
 {
