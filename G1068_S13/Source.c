@@ -17,6 +17,7 @@ typedef struct BST
 	struct BST* left;
 	NodeInfo* info;
 	struct BST* right;
+	short bFactor;
 }BinarySearchTree;
 
 
@@ -26,7 +27,7 @@ NodeInfo* createInfo(short, char*, char*, double);
 BinarySearchTree* createNode(NodeInfo*);
 void printInfo(NodeInfo* info);
 /*functions signatures for BST-AVL operations*/
-
+BinarySearchTree* rebalance(BinarySearchTree*);
 void insertBST(BinarySearchTree** root, NodeInfo* emp)
 {
 	if (*root == NULL)
@@ -42,7 +43,19 @@ void insertBST(BinarySearchTree** root, NodeInfo* emp)
 		else
 			(*root)->info = emp;
 	}
+	*root = rebalance(*root);
 }
+void printLeaves(BinarySearchTree* root)
+{
+	if (root)
+	{
+		if(root->left == NULL && root->right == NULL)
+			printInfo(root->info);
+		printLeaves(root->left);
+		printLeaves(root->right);
+	}
+}
+
 void preorder_PLR(BinarySearchTree* root)
 {
 	if (root)
@@ -84,13 +97,58 @@ void main()
 
 			insertBST(&bTree, info);
 			printf("\n*********************************\n");
-			preorder_PLR(bTree);
+			printLeaves(bTree);
 
 		}
 
 	}
 }
+int height(BinarySearchTree* root)
+{
+	if (root)
+		return 1 + max(height(root->left), height(root->right));
+	else
+		return 0;
+}
+BinarySearchTree* leftRotation(BinarySearchTree* pivot)
+{
+	BinarySearchTree* desc = pivot->right;
+	pivot->right = desc->left;
+	desc->left = pivot;
+	return desc;
+}
 
+BinarySearchTree* rightRotation(BinarySearchTree* pivot)
+{
+	BinarySearchTree* desc = pivot->left;
+	pivot->left = desc->right;
+	desc->right = pivot;
+	return desc;
+}
+BinarySearchTree* rebalance(BinarySearchTree* root)
+{
+	root->bFactor = height(root->right) - height(root->left);
+	BinarySearchTree* desc = NULL;
+	if (root->bFactor == -2)
+	{
+		desc = root->left;
+		if (desc->bFactor == -1)
+			root = rightRotation(root);
+		else
+		{
+			root->left = leftRotation(desc);
+			root = rightRotation(root);
+		}
+	}
+	else if (root->bFactor == 2)
+	{
+		desc = root->right;
+		if (desc->bFactor == -1)
+			root->right = rightRotation(desc);
+		root = leftRotation(root);
+	}
+	return root;
+}
 
 void printInfo(NodeInfo* info)
 {
@@ -105,6 +163,7 @@ BinarySearchTree* createNode(NodeInfo* emp)
 	BinarySearchTree* node = (BinarySearchTree*)malloc(sizeof(BinarySearchTree));
 	node->info = emp;
 	node->left = node->right = NULL;
+	node->bFactor = 0;
 	return node;
 }
 
