@@ -103,6 +103,16 @@ void main()
 
 	}
 }
+void printLevel(BinarySearchTree* root, int lvlNo)
+{
+
+}
+void printLevels(BinarySearchTree* root)
+{
+	int levels = height(root);
+	for (int i = 0; i < levels; i++)
+		printLevel(root, i);
+}
 int height(BinarySearchTree* root)
 {
 	if (root)
