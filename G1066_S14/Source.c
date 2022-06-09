@@ -29,6 +29,7 @@ void printInfo(NodeInfo* info);
 /*functions signatures for BST-AVL operations*/
 BinarySearchTree* rebalance(BinarySearchTree*);
 void insertBST(BinarySearchTree**, NodeInfo*);
+void printLevels(BinarySearchTree*);
 
 void printLeaves(BinarySearchTree* root)
 {
@@ -85,7 +86,34 @@ void main()
 			preorder_PLR(bTree);
 
 		}
+		printLevels(bTree);
+	}
+}
 
+short height(BinarySearchTree* root)
+{
+	if (root)
+		return 1 + max(height(root->left), height(root->right));
+	else
+		return 0;
+}
+void printLevel(BinarySearchTree* root, int lvl)
+{
+	if (root)
+	{
+		if(lvl == 0)
+			printInfo(root->info);
+		printLevel(root->left, lvl-1);
+		printLevel(root->right, lvl-1);
+	}
+}
+void printLevels(BinarySearchTree* root)
+{
+	int levels = height(root);
+	for (int i = 0; i < levels; i++)
+	{
+		printf("\nLevel %d\n", i);
+		printLevel(root, i);
 	}
 }
 void insertBST(BinarySearchTree** root, NodeInfo* emp)
@@ -105,13 +133,7 @@ void insertBST(BinarySearchTree** root, NodeInfo* emp)
 	}
 	*root = rebalance(*root);
 }
-short height(BinarySearchTree* root)
-{
-	if (root)
-		return 1 + max(height(root->left), height(root->right));
-	else
-		return 0;
-}
+
 BinarySearchTree* rightRotation(BinarySearchTree* pivot)
 {
 	BinarySearchTree* desc = pivot->left;
