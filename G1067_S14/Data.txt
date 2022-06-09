@@ -1,0 +1,10 @@
+10001,Mihailescu Valentin,Design,2200.8
+10002,Dobrogeanu Iulian,Marketing,900.9
+10003,Pacurar Alexandra,HR,300.8
+10004,Popa Mihai,Production,1800.5
+10005,Cazacu Robert,Testing,2000.2
+10006,Popescu Marian,Marketing,1500.9
+10007,Ionescu Maria,HR,1300.8
+10008,Neacsu Ruxandra,Production,1400.5
+10009,Ionescu Vasiliu,Testing,3000.2
+10010,Togan Bogdan,Design,2700.8
